@@ -6,6 +6,16 @@ One task is small and similar to TODO like and another - big with routings, diff
 
 I want to have all in one repository and use makefile to build `dist/<project-name>/index.html`.
 
+# INSTALL
+
+Build directory is in `./dist`. To build all projects run
+```bash
+make all
+
+```
+
+To clean node_modules, etc use `make clean`
+
 # IMPLEMENTATION
 
 ## API

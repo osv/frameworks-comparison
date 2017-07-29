@@ -1,4 +1,4 @@
-PROJECTS = $(sort $(dir $(wildcard ./projects/*/)))
+PROJECTS = $(sort $(dir $(wildcard ./prj/*/)))
 CLEAN_PROJECTS = $(PROJECTS:%=clean-%)
 .PHONY: all $(PROJECTS) clean dist-clean help
 
