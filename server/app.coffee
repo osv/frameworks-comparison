@@ -1,12 +1,12 @@
 'use strict'
 
-expressHandlebars = require('express-handlebars')
-serveStatic = require('serve-static')
-bodyParser = require('body-parser')
-serveIndex = require('serve-index')
-express = require('express')
-morgan = require('morgan')
-app = express()
+expressHandlebars = require 'express-handlebars'
+serveStatic =       require 'serve-static'
+bodyParser =        require 'body-parser'
+serveIndex =        require 'serve-index'
+express =           require 'express'
+morgan =            require 'morgan'
+app =               express()
 
 app.use morgan('dev')
 app.use bodyParser.json()
@@ -20,8 +20,8 @@ sourceCatalog = [
 ]
 
 sourceCatalog.forEach ([url, dir]) ->
-  app.use(url, serveStatic(dir))
-  app.use(url, serveIndex(dir, {'icons': true}))
+  app.use url, serveStatic(dir)
+  app.use url, serveIndex(dir, {'icons': true})
 
 app.get '/', (_, res) ->
   res.render 'index.handlebars',

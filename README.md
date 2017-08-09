@@ -11,7 +11,8 @@ I want to have all in one repository and use makefile to build `dist/<project-na
 Build directory is in `./dist`. To build all projects run
 ```bash
 make all
-
+./run-server.sh
+# open url in browser - http://localhost:3000
 ```
 
 To clean node_modules, etc use `make clean`
