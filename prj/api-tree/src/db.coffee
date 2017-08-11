@@ -109,7 +109,7 @@ class Db
 
   removeItem: (id) ->
     tree = @_makeTree @getList()
-    itemsForDelete = @_collectChildrens tree, id
+    itemsForDelete = @_collectChildrens tree, parseInt id
     @col.remove(itemsForDelete)
     itemsForDelete
 

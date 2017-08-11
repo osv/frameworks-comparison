@@ -30,7 +30,7 @@ module.exports.getRouter = (express) ->
 
   router.delete '/:id', (req, res) ->
     try
-      res.status(200).json db.removeItem req.params.id
+      res.status(200).json db.removeItem parseInt req.params.id
     catch e
       handleError res, e
 

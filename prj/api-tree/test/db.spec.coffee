@@ -105,9 +105,33 @@ describe 'Db', ->
       item2_2 = @db.createItem(name: 'name2_2', earnings: 5, parentId: item2)._id
       item2_1_1 = @db.createItem(name: 'name2_1_1', earnings: 5, parentId: item2_1)._id
 
-      @db.removeItem(item2)
+      removedIds = @db.removeItem(item2)
+      expect(removedIds).toEqual [item2, item2_1, item2_1_1, item2_2]
       expect(@db.getList().map((it) -> it.name)).toEqual(['name1'])
 
+      removedIds = @db.removeItem(item1)
+      expect(removedIds).toEqual [item1]
+      expect(@db.getList()).toEqual []
+
+    it 'should not delete if 1st arg is empty', ->
+      item1 = @db.createItem(name: 'name1', earnings: 50)._id
+      item2 = @db.createItem(name: 'name2', earnings: 10)._id
+
+      @db.removeItem()
+      @db.removeItem(NaN)
+      expect(@db.getList().map((it) -> it.name)).toEqual(['name1', 'name2'])
+
+    it 'should delete even id is string', ->
+      item1 = @db.createItem(name: 'name1', earnings: 50)._id
+      item2 = @db.createItem(name: 'name2', earnings: 10)._id
+
+      expect(@db.getList().map((it) -> it.name)).toEqual(['name1', 'name2'])
+      @db.removeItem(item2.toString())
+      expect(@db.getList().map((it) -> it.name)).toEqual(['name1'])
+
+      @db.removeItem(item1.toString())
+      expect(@db.getList()).toEqual []
+            
   describe 'update()', ->
     it 'should update item', ->
       item1id = @db.createItem(name: 'name1', earnings: 50)._id
