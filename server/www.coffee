@@ -1,8 +1,9 @@
 #!/usr/bin/env coffee
 
+
 # Module dependencies.
 app = require './app'
-debug = require('debug') '{name}:server'
+debug = require('debug') 'app:server'
 http = require 'http'
 
 # Normalize a port into a number, string, or false.

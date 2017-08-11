@@ -4,6 +4,7 @@
   "description": "Backend with plugins",
   "main": "app.js",
   "scripts": {
+    "dev": "nodemon -e coffee -d 1 -x 'npm run start' --",
     "start": "coffee ./www.coffee",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
