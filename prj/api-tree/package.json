@@ -1,0 +1,18 @@
+{
+  "name": "api-tree",
+  "version": "1.0.0",
+  "description": "Router for express that manage CRUD tree structure",
+  "main": "index.coffee",
+  "scripts": {
+    "build": "mkdir -p ./build && cp -r ./src/index.coffee node_modules/ ./build/",
+    "test": "jasmine ./test/runtest.spec.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "coffeescript": "^1.12.7",
+    "jasmine": "^2.7.0",
+    "lodash": "^4.17.4",
+    "lokijs": "^1.5.0"
+  }
+}
