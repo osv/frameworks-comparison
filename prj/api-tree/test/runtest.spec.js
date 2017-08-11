@@ -1,2 +1,4 @@
 require('coffeescript/register');
-require('./test.spec.coffee')
+
+require('./db.spec.coffee');
+require('./fakeData.spec.coffee');

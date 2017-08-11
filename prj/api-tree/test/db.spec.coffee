@@ -1,4 +1,4 @@
-{Db, RequiredFields} = require './../src/index.coffee'
+{Db, RequiredFields} = require './../src/db.coffee'
 
 describe 'Db', ->
   beforeEach -> @db = new Db()
@@ -17,6 +17,11 @@ describe 'Db', ->
       {_id} = @db.createItem name: 'parent', earnings: 999
       doc = @db.createItem name: 'child name', earnings: 2, parentId: _id
       expect(doc).toEqual(name: 'child name', earnings: 2, parentId: _id, _id: jasmine.any(Number))
+
+    it 'should rise error if name not unique', ->
+      f = => @db.createItem name: 'child name', earnings: 1
+      f()
+      expect(f).toThrowError(/Duplicate key for property name/)
 
     it 'should rise error if parentId is not null and not valid id', ->
       f = => @db.createItem name: 'child name', earnings: 1, parentId: 4444
