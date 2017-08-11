@@ -42,12 +42,12 @@ class Db
 
   # Build childrens for doc with this id
   # find id in childrens recursivly, if found - raise error
-  _ensureChildrensHaveNoId: (id) ->
+  _ensureChildrensHaveNoId: (id, newParentId) ->
     docWithChildrens = {_id: id}
     @_makeTree @getList(), docWithChildrens
     findId = (it, id) -> it.childrens.some((c) ->
-      c.parentId == id || findId(c, id))
-    if findId docWithChildrens, id
+      c._id == id || findId(c, id))
+    if findId docWithChildrens, newParentId
       throw Error 'parentId cannot be equal to id if his children'
 
   update: (id, payload) ->
@@ -58,7 +58,8 @@ class Db
     if +payload.parentId == +id
       throw Error "parentId should not be same as id"
 
-    @_ensureChildrensHaveNoId id
+    if payload.parentId
+      @_ensureChildrensHaveNoId id, payload.parentId
 
     doc = @col.get(id)
     if doc

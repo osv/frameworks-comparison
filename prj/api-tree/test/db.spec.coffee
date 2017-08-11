@@ -161,6 +161,7 @@ describe 'Db', ->
       expect(@db.getTree()[0].childEarnings).toBe 510
 
     it 'should raise error if parentId is one of id of childrens', ->
+      item1 = @db.createItem(name: 'name1', earnings: 10)._id
       item2 = @db.createItem(name: 'name2', earnings: 10)._id
       item2_1 = @db.createItem(name: 'name2_1', earnings: 5, parentId: item2)._id
       item2_2 = @db.createItem(name: 'name2_2', earnings: 5, parentId: item2)._id
@@ -169,3 +170,7 @@ describe 'Db', ->
       expect(=>
         updatedItem = @db.update item2, name: 'name2', earnings: 10, parentId: item2_2
       ).toThrowError('parentId cannot be equal to id if his children')
+
+      expect(=>
+        updatedItem = @db.update item2, name: 'name1_1', earnings: 10, parentId: item1
+      ).not.toThrow()
