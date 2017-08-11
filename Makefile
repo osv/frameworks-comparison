@@ -1,6 +1,7 @@
 PROJECTS = $(sort $(dir $(wildcard ./prj/*/)))
 CLEAN_PROJECTS = $(PROJECTS:%=clean-%)
-.PHONY: all $(PROJECTS) clean dist-clean help
+TEST_PROJECTS = $(PROJECTS:%=test-%)
+.PHONY: all $(PROJECTS) $(TEST_PROJECTS) $(CLEAN_PROJECTS) clean dist-clean help
 
 help:
 	@echo "all - build and install to ./dist all projects"
@@ -15,6 +16,11 @@ $(PROJECTS):
 
 $(CLEAN_PROJECTS):
 	-$(MAKE) -C $(@:clean-%=%) clean
+
+test: $(TEST_PROJECTS)
+
+$(TEST_PROJECTS):
+	-$(MAKE) -C $(@:test-%=%) test
 
 clean: $(CLEAN_PROJECTS)
 

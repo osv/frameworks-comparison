@@ -7,6 +7,7 @@ DEPENDENCIES += node_modules/.sentinel
 CLEAN_DEPENDENCIES += clean_node_modules
 
 BUILD_COMMANDS += "npm run build"
+TEST_COMMANDS += "npm test"
 
 SOURCE_DIRS ?= ./src
 SOURCES ?= package.json
