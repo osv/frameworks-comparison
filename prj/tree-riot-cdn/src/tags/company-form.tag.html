@@ -1,0 +1,125 @@
+<my-company-form>
+    <form onsubmit={submit}>
+        <div class="input-field">
+            <input ref="name" id="name" type="text"
+                   class="{invalid: errors.name}"
+                   onkeydown={ validate.bind(this, 'name') }>
+            <label for="name">Company name</label>
+        </div>
+        <div class="input-field">
+            <input ref="earn" id="earn" type="number"
+                   class="{invalid: errors.earn}"
+                   onkeydown={ validate.bind(this, 'earn') }>
+            <label for="earn">Company earnings</label>
+        </div>
+        <div class="input-field">
+            <input type="text" ref="autocompleteParent" id="parentCompany" autocomplete="off"
+                   class={invalid: errors.autocompleteParent, autocomplete: true}
+                   onchange={ validate.bind(this, 'autocompleteParent') }>
+            <label for="parentCompany">Parent company name</label>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action">
+            {company._id ? 'Update' : 'Create'}
+        </button>
+
+        <button click={ resetForm } class="btn waves-effect waves-light" type="button" name="action">
+            {company._id ? 'Cancel' : 'Reset'}
+        </button>
+
+    </form>
+
+    <script>
+     /* interface of this.opts:
+      * {
+      *     onSave: Function,
+      *     companiesObs: Observer,
+      *     companyObs: Observer
+      * };*/
+
+     // lookup tables
+     this.companiesByName = {};
+     this.companiesNames = {};
+
+     // state
+     this.errors = {}
+     this.company = {}
+
+     const validatorsByRefName = {
+         autocompleteParent: () => {
+             const parentName = this.refs.autocompleteParent.value
+             return parentName && !this.companiesNames.hasOwnProperty(parentName)
+         },
+         name: () => !this.refs.name.value,
+         earn: () => isNaN(parseFloat(this.refs.earn.value))
+     }
+
+     this.opts.companiesObs.on('next', (companiesTree) => {
+         this.companiesByName = {};
+         this.companiesNames = {};
+         const traverse = (company) => {
+             this.companiesByName[company.name] = company._id
+             this.companiesNames[company.name] = null // used for autocomplete
+             company.childrens.forEach(traverse)
+         }
+
+         companiesTree.forEach(traverse);
+
+         this.update()
+     })
+
+     this.on('mount', () => Materialize.updateTextFields())
+
+     this.on('updated', () => {
+         /* material specified sync code */
+         Materialize.updateTextFields();
+
+         $(this.refs.autocompleteParent).autocomplete({
+             data: this.companiesNames,
+             limit: 20,
+             minLength: 1,
+         });
+     })
+
+     this.opts.companyObs.on('next', (company = {}) => {
+         this.company = company;
+         this.refs.name.value = company.name || ''
+         this.refs.earn.value = company.earnings || ''
+         this.refs.autocompleteParent.value = getKeyByValue(this.companiesByName,
+                                                            company.parentId) || ''
+         this.errors = {}
+         this.update()
+     });
+
+     resetForm() {
+         this.opts.companyObs.trigger('next', {});
+     }
+
+     submit(e) {
+         e.preventDefault()
+         const hasErrors = ['name', 'earn', 'autocompleteParent']
+             .map(this.validate)
+             .some((isError) => isError)
+
+         if (!hasErrors) {
+             const parentName = this.refs.autocompleteParent.value
+             this.opts.onSave({company: {
+                 _id: this.company._id,
+                 parentId: this.companiesByName[parentName],
+                 name: this.refs.name.value,
+                 earnings: this.refs.earn.value,
+             }})
+         } else {
+             this.update()
+         }
+     }
+
+     // Validate field set this.errors
+     validate(what) {
+         return this.errors[what] = validatorsByRefName[what]()
+     }
+
+     function getKeyByValue(object, value) {
+         return Object.keys(object).find(key => object[key] === value);
+     }
+    </script>
+</my-company-form>

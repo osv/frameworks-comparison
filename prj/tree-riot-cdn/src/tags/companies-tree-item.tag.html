@@ -1,0 +1,90 @@
+<my-companies-tree-item>
+    <span class="campaign-details">
+        <span class="name" class="">
+            <a onclick={ toggleExpand } if={ hasChildrens() }>
+                <i if={ isExpanded() && hasChildrens() } class="material-icons tiny">folder_open</i>
+                <i if={ !isExpanded() && hasChildrens() } class="material-icons tiny">folder</i>
+            </a>
+            { opts.company.name }
+        </span>
+        <span class="earns">
+            <my-thousands n={ opts.company.earnings }></my-thousands>
+            |
+            <my-thousands class="total" if={ hasChildrens() } n={ opts.company.childEarnings }></my-thousands>
+        </span>
+        <span class="actions">
+            <a class="show-on-hover" click={ opts.onEdit.bind(this, opts.company) }>Edit</a>
+            <a class="show-on-hover" click={ opts.onRemove.bind(this, opts.company) }>Remove</a>
+        </span>
+    </span>
+    <ul>
+        <li data-is="my-companies-tree-item"
+            if={ isExpanded() && hasChildrens() }
+            each={ childCompany in opts.company.childrens }
+            no-reorder
+            expanded-items={ parent.opts.expandedItems }
+            on-edit={ parent.opts.onEdit }
+            on-remove={ parent.opts.onRemove }
+            company={ childCompany }></li>
+    </ul>
+
+    <style>
+     .total {
+         font-weight: bold;
+     }
+     my-thousands {
+         margin-left: 5px;
+         margin-right: 5px;
+     }
+     my-thousands:first-child::after {
+     }
+
+     .campaign-details {
+         width: 100%;
+         display: block;
+     }
+
+     .actions {
+         margin-left: 15px;
+     }
+
+     .show-on-hover{
+         opacity: 0;
+         transition: opacity 0.2s ease-out 0s;
+         /* visibility: hidden; */
+     }
+
+     .campaign-details:hover .show-on-hover{
+         /* visibility: visible; */
+         opacity: 1;
+     }
+     a {
+         cursor: pointer;
+     }
+     actions a:hover {
+         text-decoration: underline !important;
+     }
+     .name {
+         color: #369;
+         font-weight: bold;
+     }
+    </style>
+
+    <script>
+     hasChildrens() {
+         return this.opts.company.childrens.length
+     }
+
+     isExpanded() {
+         return this.opts.expandedItems && this.opts.expandedItems[this.opts.company._id]
+     }
+
+     toggleExpand() {
+         o = this.opts.expandedItems
+         id = this.opts.company._id
+         o[id] = !o[id]
+         this.update()
+     }
+    </script>
+
+</my-companies-tree-item>

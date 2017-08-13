@@ -1,0 +1,87 @@
+<my-app>
+    <my-delete-dialog show-obs={ deleteDialog$ }
+                      on-confirm={ onConfirmDelete }></my-delete-dialog>
+    <div class="row">
+        <div class="col s12">
+            <h4 if={ isEditing }>Edit company { editCompanyName } </h4>
+            <h4 if={ !isEditing }>Create new company</h4>
+        </div>
+        <div class="col s6">
+            <my-company-form on-save={onSaveCompany} company-obs={editCompany$} companies-obs={companies$}></my-company-form>
+        </div>
+        <div class="col s12">
+            <my-companies-tree on-edit={ onEdit }
+                               on-remove={ onRemove }
+                               companies-obs={companies$}></my-companies-tree>
+        </div>
+    </div>
+    <script>
+      this.editCompany$ = riot.observable()
+      this.companies$ = riot.observable()
+      this.deleteDialog$ = riot.observable()
+      const COMPANY_API_URL = '/projects/api-tree'
+
+      const _fetchCompanies =
+        () => axios(COMPANY_API_URL).then((response) => this.companies$.trigger('next', response.data))
+
+      this.on('mount', () => {
+        _fetchCompanies();
+      });
+
+      this.editCompany$.on('next', (company = {}) => {
+        this.isEditing = !!company._id
+        this.editCompanyName = company.name
+        this.update()
+      })
+
+      onSaveCompany = ({company}) => {
+        if (!this.loadInProgress) {
+          const {_id, name, earnings, parentId} = company
+          data = {
+            _id,
+            name,
+            earnings: parseInt(earnings),
+            parentId: parentId
+          }
+          this.loadInProgress = true
+          axios(COMPANY_API_URL, {
+            method: company._id ? 'post' : 'put',
+            data: data
+          })
+            .catch((err) => {
+              Materialize.toast(
+                company._id ? 'Fail to update company' : 'Fail to create company'
+                , 10000
+                , 'rounded')
+              return Promise.reject()
+            })
+            .then(_fetchCompanies)
+            .then(() => this.editCompany$.trigger('next')) // clear form)
+            .finally(() => this.loadInProgress = false)
+        }
+      }
+
+      onEdit(company, event) {
+        $('html, body').animate({scrollTop: 0}, 800)
+
+        this.editCompany$.trigger('next', {
+          _id: company._id,
+          name: company.name,
+          earnings: company.earnings,
+          parentId: company.parentId
+        })
+      }
+
+      onRemove(company, event) {
+        this.onConfirmDelete = () => {
+          // Just for smooth animation
+          setTimeout(() => {
+            axios.delete(COMPANY_API_URL + '/' + company._id).then(_fetchCompanies);
+          }, 300)
+        }
+
+        this.deleteDialog$.trigger('show', {company: company});
+      }
+
+    </script>
+</my-app>

@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/nprogress/0.1.6/css/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Instagram images</title>
+    </head>
+    <body>
+        <div class="container">
+            <my-app></my-app>
+        </div>
+
+        <!-- include the riot tags -->
+        <script type="riot/tag" src="tags/app.tag.html"></script>
+        <script type="riot/tag" src="tags/delete-dialog.tag.html"></script>
+        <script type="riot/tag" src="tags/company-form.tag.html"></script>
+        <script type="riot/tag" src="tags/companies-tree.tag.html"></script>
+        <script type="riot/tag" src="tags/companies-tree-item.tag.html"></script>
+        <script type="riot/tag" src="tags/thousands.tag.html"></script>
+
+        <!-- material js -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+
+        <!-- include riot.js -->
+        <script src="https://cdn.jsdelivr.net/axios/0.16.1/axios.min.js" integrity="sha256-ayEUoFCu1J9KJCN9TR9De3XKEMb8hiPq4jwFWMU6fiE=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/nprogress/0.1.6/js/nprogress.min.js" integrity="sha256-DMIOaoQhDVg1NVSB2WHzXler0P1y+mO2Dsjm6rppWA0=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/riot/3.4.4/riot+compiler.min.js" integrity="sha256-Z7voOIzq8cKWdANZBggEL7MEtJ4qhPG2kLnDPf6VOe4=" crossorigin="anonymous"></script>
+
+        <script>
+         Promise.prototype.finally = Promise.prototype.finally || function(cb) {
+             const res = () => this;
+             const fin = () => Promise.resolve(cb()).then(res);
+             return this.then(fin, fin);
+         };
+        </script>
+
+        <script>
+         // Make API request by axios show progress
+         let loads = 0
+         function loaderStart() {
+             ++loads
+             if (loads == 1)
+                 NProgress.start()
+         }
+         function loaderStop() {
+             --loads
+             if (loads <=0) {
+                 NProgress.done()
+                 loads = 0
+             }
+         }
+
+         axios.interceptors.request.use(function (config) {
+             loaderStart()
+             return config
+         }, function (error) {
+             loaderStop()
+             return Promise.reject(error)
+         });
+
+         axios.interceptors.response.use(function (response) {
+             loaderStop()
+             return response
+         }, function (error) {
+             loaderStop()
+             return Promise.reject(error)
+         });
+        </script>
+
+        <script>
+         riot.compile(function() {
+             riot.mount('my-app');
+         })
+         NProgress.configure({ trickleSpeed: 50, minimum: 0.4 });
+        </script>
+
+        <style type="text/css" media="screen">
+         #nprogress .bar {
+             height: 10px;
+         }
+        </style>
+
+        <style>
+         /* Fix materializecss autocomplete */
+         .dropdown-content {
+             position: absolute !important;
+             width: 100%;
+         }
+        </style>
+
+    </body>
+</html>

@@ -1,0 +1,46 @@
+<my-delete-dialog>
+    <div ref="modal" class="modal">
+        <div class="modal-content">
+            <h4>Delete Company "{ name }"?</h4>
+            <div if={ this.companyNum }>
+                Deleting this company will also delete { this.companyNum } companies:
+                <ul>
+                    <li each={ it in deleteCompanyNames }> { it } </li>
+                    <li if={ deleteCompanyNames.length < this.companyNum }>...</li>
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button ref="deleteBtn" click={ opts.onConfirm }
+                    class="modal-action modal-close waves-effect waves-red btn-flat">Delete</button>
+            <button class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</button>
+        </div>
+    </div>
+
+    <style>
+     .modal-footer {
+         background-color: #ddd !important;
+         border-top: 1px #aaa solid;
+     }
+    </style>
+    <script>
+     MAX_ITEMS_TO_SHOW = 6
+
+     this.opts.showObs.on('show', ({company}) => {
+         this.name = company.name
+         this.companyNum = 0
+         this.deleteCompanyNames = []
+         calcCompanies = (company) => {
+             this.companyNum++
+             if (this.deleteCompanyNames.length < MAX_ITEMS_TO_SHOW)
+                 this.deleteCompanyNames.push(company.name)
+             company.childrens.forEach(calcCompanies)
+         }
+         company.childrens.forEach(calcCompanies)
+
+         $(this.refs.modal).modal('open')
+         this.refs.deleteBtn.focus()
+         this.update()
+     });
+    </script>
+</my-delete-dialog>

@@ -1,0 +1,18 @@
+{
+  "name": "tree-riot-cdn",
+  "version": "1.0.0",
+  "description": "Riot.js, cdn version",
+  "main": "index.js",
+  "scripts": {
+    "build": "mkdir -p ./build && cp -r ./src/* ./build",
+    "test": "echo \"No test specified\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.18.13",
+    "proxy-middleware": "^0.15.0",
+    "url": "^0.11.0"
+  }
+}
