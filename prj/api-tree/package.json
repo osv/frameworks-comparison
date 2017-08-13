@@ -10,10 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "coffeescript": "^1.12.7",
     "faker": "^4.1.0",
-    "jasmine": "^2.7.0",
     "lodash": "^4.17.4",
     "lokijs": "^1.5.0"
+  },
+  "devDependencies": {
+    "coffeescript": "^1.12.7",
+    "jasmine": "^2.7.0"
   }
 }

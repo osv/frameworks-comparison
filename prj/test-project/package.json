@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo \"BUILD\" && touch ./build/index.html"
+    "test": "echo \"No test specified\"",
+    "build": "mkdir -p ./build && touch ./build/index.html"
   },
   "author": "",
   "license": "ISC",

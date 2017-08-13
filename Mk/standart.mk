@@ -16,7 +16,7 @@ build: $(DIST_SENTINEL)
 	@echo "---[ $(PROJECT) ] $(NO_COLOR)"
 	@$(BUILD_CMD)
 
-test:
+test: $(TEST_DEPENDENCIES)
 	@for cmd in $(TEST_COMMANDS); do \
 	echo "$(RUNCMD_COLOR)===> $$cmd $(NO_COLOR)" && $$cmd ; \
 	done

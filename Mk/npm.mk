@@ -4,6 +4,7 @@
 include ../../Mk/vars.mk
 
 DEPENDENCIES += node_modules/.sentinel
+TEST_DEPENDENCIES += node_modules/.dev-sentinel
 CLEAN_DEPENDENCIES += clean_node_modules
 
 BUILD_COMMANDS += "npm run build"
@@ -15,9 +16,16 @@ SOURCES ?= package.json
 .PHONY: clean_node_modules
 
 node_modules/.sentinel: package.json
-	@echo "$(RUNCMD_COLOR)===> Init npm modules$(NO_COLOR)"
-	npm install
+	@echo "$(RUNCMD_COLOR)===> Init production npm modules$(NO_COLOR)"
+	npm install --only=production
+	mkdir -p node_modules
 	touch node_modules/.sentinel
+
+node_modules/.dev-sentinel: package.json
+	@echo "$(RUNCMD_COLOR)===> Init dev npm modules$(NO_COLOR)"
+	npm install
+	mkdir -p node_modules
+	touch node_modules/.dev-sentinel
 
 clean_node_modules:
 	rm -rf node_modules/
