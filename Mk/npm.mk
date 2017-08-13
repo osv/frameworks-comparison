@@ -17,13 +17,13 @@ SOURCES ?= package.json
 
 node_modules/.sentinel: package.json
 	@echo "$(RUNCMD_COLOR)===> Init production npm modules$(NO_COLOR)"
-	npm install --only=production
+	npm install --only=production --no-progress
 	mkdir -p node_modules
 	touch node_modules/.sentinel
 
 node_modules/.dev-sentinel: package.json
 	@echo "$(RUNCMD_COLOR)===> Init dev npm modules$(NO_COLOR)"
-	npm install
+	npm install --no-progress
 	mkdir -p node_modules
 	touch node_modules/.dev-sentinel
 
