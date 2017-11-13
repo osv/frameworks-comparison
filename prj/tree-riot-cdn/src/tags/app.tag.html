@@ -37,7 +37,7 @@
       onSaveCompany({company}) {
         if (!this.loadInProgress) {
           const {_id, name, earnings, parentId} = company
-          data = {
+          const data = {
             _id,
             name,
             earnings: parseInt(earnings),

@@ -4,6 +4,7 @@
   "description": "Riot.js, cdn version",
   "main": "index.js",
   "scripts": {
+    "dev": "node ./dev-server.js",
     "build": "mkdir -p ./build && cp -r ./src/* ./build",
     "test": "echo \"No test specified\""
   },
